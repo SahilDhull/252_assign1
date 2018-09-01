@@ -100,65 +100,64 @@ int send_image(int socket){
             bzero(send_buffer, sizeof(send_buffer));
         }
     }
+int main(int argc , char *argv[])
+{
+    int socket_desc , new_socket , c, read_size,buffer = 0;
+    struct sockaddr_in server , client;
+    char *readin;
 
-    int main(int argc , char *argv[])
+    //Create socket
+    socket_desc = socket(AF_INET , SOCK_STREAM , 0);
+    if (socket_desc == -1)
     {
-        int socket_desc , new_socket , c, read_size,buffer = 0;
-        struct sockaddr_in server , client;
-        char *readin;
+        printf("Could not create socket");
+    }
 
-        //Create socket
-        socket_desc = socket(AF_INET , SOCK_STREAM , 0);
-        if (socket_desc == -1)
-        {
-            printf("Could not create socket");
-        }
-
-        //Prepare the sockaddr_in structure
-        server.sin_family = AF_INET;
-        server.sin_addr.s_addr = INADDR_ANY/*inet_addr("127.0.0.1")*/;
-        server.sin_port = htons( 5000 );
-        int opt = 1;
-        /*if (setsockopt(<Master socket FD>, SOL_SOCKET, SO_REUSEADDR, (char *)&opt, sizeof(opt))<0)
-        {
-        perror("setsockopt");
-        exit(EXIT_FAILURE);
+    //Prepare the sockaddr_in structure
+    server.sin_family = AF_INET;
+    server.sin_addr.s_addr = INADDR_ANY/*inet_addr("127.0.0.1")*/;
+    server.sin_port = htons( 5000 );
+    int opt = 1;
+    /*if (setsockopt(<Master socket FD>, SOL_SOCKET, SO_REUSEADDR, (char *)&opt, sizeof(opt))<0)
+    {
+    perror("setsockopt");
+    exit(EXIT_FAILURE);
     }
     if(setsockopt(<Master socket FD>, SOL_SOCKET, SO_REUSEPORT, (char *)&opt, sizeof(opt))<0){
     perror("setsockopt");
     exit(EXIT_FAILURE);
-}*/
-//Bind
-if( bind(socket_desc,(struct sockaddr *)&server , sizeof(server)) < 0)
-{
-    puts("bind failed");
-    return 1;
-}
+    }*/
+    //Bind
+    if( bind(socket_desc,(struct sockaddr *)&server , sizeof(server)) < 0)
+    {
+        puts("bind failed");
+        return 1;
+    }
 
-puts("bind done");
+    puts("bind done");
 
-//Listen
-listen(socket_desc , 3);
+    //Listen
+    listen(socket_desc , 3);
 
-//Accept and incoming connection
-puts("Waiting for incoming connections...");
-c = sizeof(struct sockaddr_in);
+    //Accept and incoming connection
+    puts("Waiting for incoming connections...");
+    c = sizeof(struct sockaddr_in);
 
-if((new_socket = accept(socket_desc, (struct sockaddr *)&client,(socklen_t*)&c))){
-    puts("Connection accepted");
-}
+    if((new_socket = accept(socket_desc, (struct sockaddr *)&client,(socklen_t*)&c))){
+        puts("Connection accepted");
+    }
 
-fflush(stdout);
+    fflush(stdout);
 
-if (new_socket<0)
-{
-    perror("Accept Failed");
-    return 1;
-}
+    if (new_socket<0)
+    {
+        perror("Accept Failed");
+        return 1;
+    }
 
-send_image(new_socket);
+    send_image(new_socket);
 
-close(socket_desc);
-fflush(stdout);
-return 0;
+    close(socket_desc);
+    fflush(stdout);
+    return 0;
 }
