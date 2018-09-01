@@ -60,3 +60,82 @@ while(recv_size < size) {
 
     FD_ZERO(&fds);
     FD_SET(socket,&fds);
+
+    buffer_fd = select(FD_SETSIZE,&fds,NULL,NULL,&timeout);
+
+    if (buffer_fd < 0)
+       printf("error: bad file descriptor set.\n");
+
+    if (buffer_fd == 0)
+       printf("error: buffer read timeout expired.\n");
+
+    if (buffer_fd > 0)
+    {
+        do{
+               read_size = read(socket,imagearray, 10241);
+            }while(read_size <0);
+
+            printf("Packet number received: %i\n",packet_index);
+        printf("Packet size: %i\n",read_size);
+
+
+        //Write the currently read data into our image file
+         write_size = fwrite(imagearray,1,read_size, image);
+         printf("Written image size: %i\n",write_size);
+
+             if(read_size !=write_size) {
+                 printf("error in read write\n");    }
+
+
+             //Increment the total number of bytes read
+             recv_size += read_size;
+             packet_index++;
+             printf("Total received image size: %i\n",recv_size);
+             printf(" \n");
+             printf(" \n");
+    }
+
+}
+
+
+  fclose(image);
+  printf("Image successfully Received!\n");
+  return 1;
+  }
+
+  int main(int argc , char *argv[])
+  {
+
+  int socket_desc;
+  struct sockaddr_in server;
+  char *parray;
+
+
+  //Create socket
+  socket_desc = socket(AF_INET , SOCK_STREAM , 0);
+
+  if (socket_desc == -1) {
+  printf("Could not create socket");
+  }
+
+  memset(&server,0,sizeof(server));
+  server.sin_addr.s_addr = inet_addr("127.0.0.1");
+  server.sin_family = AF_INET;
+  server.sin_port = htons( 5000 );
+
+  //Connect to remote server
+  if (connect(socket_desc , (struct sockaddr *)&server , sizeof(server)) < 0) {
+  // cout<<strerror(errno);
+  close(socket_desc);
+  puts("Connect Error");
+  return 1;
+  }
+
+  puts("Connected\n");
+
+  receive_image(socket_desc);
+
+  close(socket_desc);
+
+  return 0;
+  }
