@@ -208,6 +208,11 @@ int main(int argc , char *argv[])
 
     printf("Enter Query: ");
     scanf("%s", query);
+    int stat;
+    do{
+        stat = write(socket_desc, &query, 100);
+    }while(stat<0);
+
     parse(query);
 
     int n;
