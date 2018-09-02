@@ -5,7 +5,8 @@ The repository contains server.c,client.c and other files
 
 
 
-
+To load docker image from .tar:
+  docker load -i server.tar
 To run the docker image, command:
   docker run -it -p 5432:5432 server
 To run the server:
