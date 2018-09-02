@@ -1,16 +1,13 @@
-#include<stdio.h>
-#include<string.h>
-#include<sys/socket.h>
-#include<arpa/inet.h>
-#include<sys/ioctl.h>
-#include<unistd.h>
-// #include<iostream>
-// #include<fstream>
-#include<errno.h>
-// using namespace std;
 
-//This function is to be used once we have confirmed that an image is to be sent
-//It should read and output an image file
+/* credit @Daniel Scocco */
+
+/****************** CLIENT CODE ****************/
+
+#include <stdio.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <string.h>
+#include <arpa/inet.h>
 
 char count[5] = {'0','0','0','0','\0'};
 
@@ -48,133 +45,81 @@ void parse(char s[])
     }
 }
 
+void receive_image(int clientSocket,char name[]) {
+    //Read Picture Size
+    printf("Reading Picture Size\n");
+    int fsize;
+    // result = recv(clientSocket, &fsize, sizeof(int),0);
+    read(clientSocket,&fsize,sizeof(fsize));
+    // if(result<0) printf("wrong\n" );
+    int size = ntohl(fsize);
+    printf("%d\n",size );
+    //Read Picture Byte Array
+    printf("Reading Picture Byte Array\n");
+    char buffer[size];
+    recv(clientSocket, buffer, size,0);
+    printf("okay\n" );
 
-
-int receive_image(int socket)
-{ // Start function
-
-    int buffersize = 0, recv_size = 0,size = 0, read_size, write_size, packet_index =1,stat;
-
-    char imagearray[10241],verify = '1';
+    //Convert it Back into Picture
+    printf("Converting Byte Array to Picture\n");
     FILE *image;
-
-    //Find the size of the image
-    do{
-        stat = read(socket, &size, sizeof(int));
-    }while(stat<0);
-
-    printf("Packet received.\n");
-    printf("Packet size: %i\n",stat);
-    printf("Image size: %i\n",size);
-    printf(" \n");
-
-    char buffer[] = "Got it";
-
-    //Send our verification signal
-    do{
-        stat = write(socket, &buffer, sizeof(int));
-    }while(stat<0);
-
-    printf("Reply sent\n");
-    printf(" \n");
-
-    image = fopen("capture2.jpeg", "w");
-
-    if( image == NULL) {
-        printf("Error has occurred. Image file could not be opened\n");
-        return -1;
-    }
-
-        //Loop while we have not received the entire file yet
-
-
-    int need_exit = 0;
-    struct timeval timeout = {10,0};
-
-    fd_set fds;
-    int buffer_fd, buffer_out;
-
-    while(recv_size < size) {
-        //while(packet_index < 2){
-
-    FD_ZERO(&fds);
-    FD_SET(socket,&fds);
-
-    buffer_fd = select(FD_SETSIZE,&fds,NULL,NULL,&timeout);
-
-    if (buffer_fd < 0)
-    printf("error: bad file descriptor set.\n");
-
-    if (buffer_fd == 0)
-    printf("error: buffer read timeout expired.\n");
-
-    if (buffer_fd > 0)
-    {
-        do{
-            read_size = read(socket,imagearray, 10241);
-        }while(read_size <0);
-
-        printf("Packet number received: %i\n",packet_index);
-        printf("Packet size: %i\n",read_size);
-
-
-        //Write the currently read data into our image file
-        write_size = fwrite(imagearray,1,read_size, image);
-        printf("Written image size: %i\n",write_size);
-
-        if(read_size !=write_size) {
-            printf("error in read write\n");    }
-
-
-            //Increment the total number of bytes read
-            recv_size += read_size;
-            packet_index++;
-            printf("Total received image size: %i\n",recv_size);
-            printf(" \n");
-            printf(" \n");
-        }
-
-    }
-
-
+    printf("okay");
+    image = fopen(name, "w");
+    int i=0;
+    while(i<=size) fputc(buffer[i++],image);
+    // fwrite(p_array, 1, sizeof(p_array), image);
     fclose(image);
-    printf("Image successfully Received!\n");
-    return 1;
 }
 
-int main(int argc , char *argv[])
-{
+int main(){
+    int clientSocket;
+    // char buffer[1024];
+    int xsocket;
+    int result;
+    struct sockaddr_in serverAddr;
+    socklen_t addr_size;
 
-    int socket_desc;
-    struct sockaddr_in server;
-    char *parray;
+    /*---- Create the socket. The three arguments are: ----*/
+    /* 1) Internet domain 2) Stream socket 3) Default protocol (TCP in this case) */
+    clientSocket = socket(PF_INET, SOCK_STREAM, 0);
 
+    /*---- Configure settings of the server address struct ----*/
+    /* Address family = Internet */
+    serverAddr.sin_family = AF_INET;
+    /* Set port number, using htons function to use proper byte order */
+    serverAddr.sin_port = htons(5432);
+    /* Set IP address to localhost */
+    serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+    /* Set all bits of the padding field to 0 */
+    memset(serverAddr.sin_zero, '\0', sizeof serverAddr.sin_zero);
 
-    //Create socket
-    socket_desc = socket(AF_INET , SOCK_STREAM , 0);
+    /*---- Connect the socket to the server using the address struct ----*/
+    addr_size = sizeof serverAddr;
+    connect(clientSocket, (struct sockaddr *) &serverAddr, addr_size);
 
-    if (socket_desc == -1) {
-        printf("Could not create socket");
+    char query[100];
+    printf("Enter Query: ");
+    fgets(query,100,stdin);
+    write(clientSocket,&query,100);
+    parse(query);
+
+    int c1,c2,c3,c4;
+    c1=count[0]-'0';
+    c2=count[1]-'0';
+    c3=count[2]-'0';
+    c4=count[3]-'0';
+    int cnt[4]={c1,c2,c3,c4};
+    char str[4][10]={"dogs","cats","cars","trucks"};
+    int n=c1+c2+c3+c4;
+    char name[15];
+    for(int i = 0 ; i < n ; i++)
+    {
+      // make_name(i);
+      printf("%d\n", i);
+      sprintf(name,"%d.jpg",i+1 );
+      receive_image(clientSocket,name);
     }
 
-    memset(&server,0,sizeof(server));
-    server.sin_addr.s_addr = inet_addr("127.0.0.1");
-    server.sin_family = AF_INET;
-    server.sin_port = htons( 5000 );
-
-    //Connect to remote server
-    if (connect(socket_desc , (struct sockaddr *)&server , sizeof(server)) < 0) {
-        // cout<<strerror(errno);
-        close(socket_desc);
-        puts("Connect Error");
-        return 1;
-    }
-
-    puts("Connected\n");
-
-    receive_image(socket_desc);
-
-    close(socket_desc);
 
     return 0;
 }
