@@ -15,9 +15,7 @@ Contributions:
 
 Parsing function: Shubham
 
-Server.c: Sahil
-
-Client.c: Siddhant
+server.c and client.c: Sahil and Siddhant
 
 script.sh, remove.sh, begin.txt, end.txt: Shubham and Lyazii Ng
 
