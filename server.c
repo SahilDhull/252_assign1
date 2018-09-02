@@ -46,7 +46,7 @@ void parse(char s[])
 
 void send_image(int newSocket, char query[]){
     FILE *fp = fopen(query,"rb+");
-    long lsize;
+    int lsize;
     //char *buffer;
 
     fseek(fp , 0 ,SEEK_END);
@@ -56,14 +56,14 @@ void send_image(int newSocket, char query[]){
     //buffer = (char*)malloc(sizeof(char)*lsize);
     char buffer[lsize];
     fread(buffer,1,lsize,fp);
-    printf("okay\n" );
-    printf("%ld\n", lsize);
+    // printf("okay\n" );
+    printf("size = %d\n", lsize);
     int cn=htonl(lsize);
 
-    write(newSocket,&cn,sizeof(cn));
-    printf("okay\n" );
+    send(newSocket,&cn,sizeof(int),0);
+    // printf("okay\n" );
     send(newSocket,buffer,lsize,0);
-    printf("okay\n" );
+    // printf("okay\n" );
 }
 
 int main(){
@@ -93,7 +93,7 @@ int main(){
 
     /*---- Listen on the socket, with 5 max connection requests queued ----*/
     if(listen(welcomeSocket,5)==0)
-    printf("I'm listening\n");
+    printf("Send Query\n");
     else
     printf("Error\n");
 
@@ -102,10 +102,11 @@ int main(){
     newSocket = accept(welcomeSocket, (struct sockaddr *) &serverStorage, &addr_size);
 
     char inp[100];
-    read(newSocket,&inp,100);
+    recv(newSocket,&inp,100,0);
+    printf("%s\n", inp);
     parse(inp);
 
-    printf("okay\n" );
+    // printf("okay\n" );
     int c1,c2,c3,c4;
     c1=count[0]-'0';
     c2=count[1]-'0';
@@ -122,14 +123,13 @@ int main(){
             for(j=0;j<cnt[i];j++){
                 char query[15];
                 // sprintf(query,"%s/%d.jpg",str[i],j+1);
-                sprintf(query,"%s/1.jpg",str[i]);
+                sprintf(query,"%s/%d.jpg",str[i],j+1);
                 printf("query = %s\n", query);
                 send_image(newSocket,query);
                 // printf("okay till now --------------------\n" );
             }
         }
     }
-
 
     return 0;
 }

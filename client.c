@@ -8,6 +8,7 @@
 #include <netinet/in.h>
 #include <string.h>
 #include <arpa/inet.h>
+#include <stdlib.h>
 
 char count[5] = {'0','0','0','0','\0'};
 
@@ -47,23 +48,23 @@ void parse(char s[])
 
 void receive_image(int clientSocket,char name[]) {
     //Read Picture Size
-    printf("Reading Picture Size\n");
+    // printf("Reading Picture Size\n");
     int fsize;
     // result = recv(clientSocket, &fsize, sizeof(int),0);
-    read(clientSocket,&fsize,sizeof(fsize));
+    recv(clientSocket,&fsize,sizeof(int),0);
     // if(result<0) printf("wrong\n" );
     int size = ntohl(fsize);
-    printf("%d\n",size );
+    printf("size = %d\n",size );
     //Read Picture Byte Array
-    printf("Reading Picture Byte Array\n");
+    // printf("Reading Picture Byte Array\n");
     char buffer[size];
     recv(clientSocket, buffer, size,0);
-    printf("okay\n" );
+    // printf("okay\n" );
 
     //Convert it Back into Picture
-    printf("Converting Byte Array to Picture\n");
+    // printf("Converting Byte Array to Picture\n");
     FILE *image;
-    printf("okay");
+    // printf("okay");
     image = fopen(name, "w");
     int i=0;
     while(i<=size) fputc(buffer[i++],image);
@@ -100,8 +101,11 @@ int main(){
     char query[100];
     printf("Enter Query: ");
     fgets(query,100,stdin);
-    write(clientSocket,&query,100);
+    send(clientSocket,&query,100,0);
+    // printf("okay\n" );
     parse(query);
+
+    system("./remove.sh");
 
     int c1,c2,c3,c4;
     c1=count[0]-'0';
@@ -109,17 +113,19 @@ int main(){
     c3=count[2]-'0';
     c4=count[3]-'0';
     int cnt[4]={c1,c2,c3,c4};
-    char str[4][10]={"dogs","cats","cars","trucks"};
     int n=c1+c2+c3+c4;
     char name[15];
+    // printf("%d\n",n );
     for(int i = 0 ; i < n ; i++)
     {
       // make_name(i);
-      printf("%d\n", i);
+      printf("image number %d\n", i+1);
       sprintf(name,"%d.jpg",i+1 );
       receive_image(clientSocket,name);
     }
-
+    char com[30];
+	sprintf(com,"./script.sh %d %d %d %d",c1,c2,c3,c4);
+	system(com);
 
     return 0;
 }
