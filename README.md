@@ -27,14 +27,21 @@ Dockerization: Sahil and Shubham
 For Running:
 
 To pull docker image:
+
   docker pull sahil25dhull/server
 
 To run the docker image, command:
+
   docker run -it -p 5432:5432 sahil25dhull/server
 
 To run the server: (inside the container)
+
   cd home
+  
   ./se                  
 
 Now simultaneously run following command on another terminal (in the directory containing client.c and other files)
-  ./cl                  #or client.c can be compiled as gcc client.c -o cl
+
+  ./cl                 
+  
+  #or client.c can be compiled as gcc client.c -o cl
