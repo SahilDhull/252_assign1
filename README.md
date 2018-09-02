@@ -7,7 +7,7 @@ The repository contains server.c,client.c and other files
 
 
 To run the docker image, command:
-  docker run -it -p 5432:5432 <image-id>
+  docker run -it -p 5432:5432 server
 To run the server:
   cd home/server/
   ./se                  #or server.c can be compiled as gcc server.c -o se
