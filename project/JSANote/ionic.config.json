@@ -1,0 +1,7 @@
+{
+  "name": "JSANote",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "ionic-angular"
+}

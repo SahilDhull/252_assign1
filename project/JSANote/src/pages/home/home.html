@@ -1,0 +1,39 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      Deliver It
+    </ion-title>
+
+    
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-list>
+    <!-- <ion-list-header>
+      Notes
+    </ion-list-header> -->
+    <ion-buttons center>
+      <button full navPush="AddNotePage" ion-button>
+        <ion-icon>Add Order</ion-icon>
+      </button>
+    </ion-buttons>
+
+    <ion-buttons>
+      <button full navPush="AddNotePage" ion-button>
+        <ion-icon>Open For Delivery</ion-icon>
+      </button>
+    </ion-buttons>
+
+    <ion-list-header>
+      To Deliver
+    </ion-list-header>
+
+    <ion-item *ngFor="let note of noteList | async" 
+    detail-push navPush="EditNotePage" [navParams]="{note:note}">
+      {{note.title}}
+      <br>
+      {{note.content}}
+    </ion-item>
+  </ion-list>
+</ion-content>
