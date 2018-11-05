@@ -11,8 +11,9 @@ import { NoteListService } from '../../services/note-list.service';
 export class EditNotePage {
 
   note: Note = {
-    title: '',
-    content: ''
+    items: '',
+    cost: undefined,
+    loc: ''
   };
 
   constructor(

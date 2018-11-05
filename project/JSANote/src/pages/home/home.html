@@ -31,9 +31,11 @@
 
     <ion-item *ngFor="let note of noteList | async" 
     detail-push navPush="EditNotePage" [navParams]="{note:note}">
-      {{note.title}}
+      Items : {{note.items}}
       <br>
-      {{note.content}}
+      Cost : {{note.cost}}
+      <br>
+      Location : {{note.loc}}
     </ion-item>
   </ion-list>
 </ion-content>

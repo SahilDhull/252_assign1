@@ -10,13 +10,18 @@
 <ion-content padding>
 
   <ion-item>
-    <ion-label>Title</ion-label>
-    <ion-input [(ngModel)]="note.title" placeholder="Java Sample Approach"></ion-input>
+    <ion-label>Items</ion-label>
+    <ion-textarea [(ngModel)]="note.items" placeholder="Java Technology - Spring Framework"></ion-textarea>
   </ion-item>
 
   <ion-item>
-    <ion-label>Content</ion-label>
-    <ion-textarea [(ngModel)]="note.content" placeholder="Java Technology - Spring Framework"></ion-textarea>
+    <ion-label>Estimated Cost</ion-label>
+    <ion-input [(ngModel)]="note.cost" placeholder="Java Sample Approach"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>Location (Optional)</ion-label>
+    <ion-input [(ngModel)]="note.loc" placeholder="Java Sample Approach"></ion-input>
   </ion-item>
 
   <button ion-button block clear (click)="updateNote(note)">Save</button>

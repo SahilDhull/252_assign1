@@ -11,8 +11,9 @@ import { NoteListService } from '../../services/note-list.service';
 export class AddNotePage {
 
   note: Note = {
-    title: '',
-    content: ''
+    items: '',
+    cost: undefined,
+    loc: ''
   };
 
   constructor(
@@ -29,6 +30,10 @@ export class AddNotePage {
     this.noteListService.addNote(note).then(ref => {
       this.navCtrl.setRoot('HomePage');
     })
+  }
+
+  loadmap(){
+    this.navCtrl.setRoot('MapPage');
   }
 
 }

@@ -18,13 +18,20 @@
 
   <ion-item>
     <ion-label>Items</ion-label>
-    <ion-textarea [(ngModel)]="note.content" placeholder="Java Technology - Spring Framework"></ion-textarea>
+    <ion-textarea [(ngModel)]="note.items" placeholder="Mention Items and Quantity"></ion-textarea>
   </ion-item>
 
   <ion-item>
     <ion-label>Estimated Cost</ion-label>
-    <ion-input [(ngModel)]="note.title" placeholder="Java Sample Approach"></ion-input>
+    <ion-input [(ngModel)]="note.cost" placeholder="Approximate"></ion-input>
   </ion-item>
 
-  <button ion-button block clear (click)="addNote(note)">Add</button>
+  <ion-item>
+    <ion-label>Location</ion-label>
+    <ion-input [(ngModel)]="note.loc" placeholder="Optional"></ion-input>
+  </ion-item>
+
+  <button ion-button block clear (click)="loadmap()">Map</button>
+
+  <button ion-button full outline (click)="addNote(note)">Add</button>
 </ion-content>

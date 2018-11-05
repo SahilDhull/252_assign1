@@ -1,5 +1,7 @@
 export interface Note {
     key?: string;
-    title: string;
-    content: string;
+    items: string;
+    cost: number;
+    loc: string;
+    // coords:;
 }
