@@ -13,7 +13,9 @@ export class EditNotePage {
   note: Note = {
     items: '',
     cost: undefined,
-    loc: ''
+    loc: '',
+    lat: undefined,
+    lng: undefined
   };
 
   constructor(

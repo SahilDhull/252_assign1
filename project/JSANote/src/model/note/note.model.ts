@@ -3,5 +3,7 @@ export interface Note {
     items: string;
     cost: number;
     loc: string;
+    lat: number;
+    lng: number;
     // coords:;
 }

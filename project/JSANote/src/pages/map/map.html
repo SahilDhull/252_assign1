@@ -27,11 +27,15 @@
 <ion-header>
 
   <ion-navbar>
+      <!-- <ion-nav-back-button class="button-clear">
+        </ion-nav-back-button> -->
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
     <ion-title>Map</ion-title>
+    <button ion-button left (click)="goback()">Done</button>
   </ion-navbar>
+
 
 </ion-header>
 
@@ -44,6 +48,9 @@
     <br>
   
   </div>   -->
-  <div id="map"></div>
+  <div id="map">
+
+      
+  </div>
   <!-- <script type="text/javascript" src='map.js'></script> -->
 </ion-content>
