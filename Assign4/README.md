@@ -1,3 +1,11 @@
+Contributions:
+
+Part A: Lyazii
+
+Part B: Sahil
+
+Part C: Shubham and Siddhant
+
 
 The base code for this project has been taken from WikiHow:
 
@@ -12,12 +20,16 @@ You'll also need to create a database called 'secure_login'.  When you've done t
 The code to create and populate the necessary tables is included in the 'secure_login.sql' file.  It populates the members table with a single user with the following details:
 
 Username	: test_user 
+
 Email		: test@example.com 
+
 Password	: 6ZaxN2Vzm9NUJRE
 
 
 CREATE database secure_login;
+
 USE secure_login;
+
 source address_of_sql_file;
 
 
