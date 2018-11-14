@@ -1,3 +1,5 @@
-# 252_assign1
+Repository for the course CS252
 
-Repository for Assignments of the course CS252
+# Project Github Link
+
+https://github.com/SahilDhull/Deliver-It
